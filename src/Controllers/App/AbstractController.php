@@ -8,6 +8,15 @@ class AbstractController
     {
         $path = "../src/Templates/" . $template;
     
-        echo file_get_contents($path);
+        $content = htmlspecialchars(file_get_contents($path));
+
+        $keys = array_keys($datas);
+        
+        foreach($keys as $key)
+        {
+            $content = str_replace("@" . $key, $datas[$key], $content);
+        }
+
+        echo $content;
     }
 };

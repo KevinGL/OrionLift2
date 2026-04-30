@@ -1,1 +1,1 @@
-HOME/INDEX
+Bonjour @name

@@ -18,9 +18,9 @@ class RoutesManager
         $controllerName = $this->routes[$url][0];
         $method = $this->routes[$url][1];
 
-        if(!class_exists($controllerName) || !method_exists($controllerName, $method))
+        if(!array_key_exists($url, $this->routes) || !class_exists($controllerName) || !method_exists($controllerName, $method))
         {
-            header("Location: /error/404"); 
+            header("Location: /error/404");
             exit();
         }
 
