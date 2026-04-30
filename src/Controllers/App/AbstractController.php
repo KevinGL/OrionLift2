@@ -6,6 +6,8 @@ class AbstractController
 {
     protected function view($template, $datas = [])
     {
-        var_dump($template);
+        $path = "../src/Templates/" . $template;
+    
+        echo file_get_contents($path);
     }
 };

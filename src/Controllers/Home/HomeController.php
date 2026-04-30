@@ -8,6 +8,6 @@ class HomeController extends AbstractController
 {
     public function index()
     {
-        echo "OK";
+        $this->view("Home/index.php");
     }
 };
