@@ -8,7 +8,7 @@ class AbstractController
     {
         $path = "../src/Templates/" . $template;
     
-        $content = htmlspecialchars(file_get_contents($path));
+        $content = file_get_contents($path);
 
         $keys = array_keys($datas);
         
