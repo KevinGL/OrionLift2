@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
-    <title>Page introuvable !</title>
+    <title>Accueil</title>
   </head>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <body>
