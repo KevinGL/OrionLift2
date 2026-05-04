@@ -3,6 +3,7 @@
 namespace App\Controllers\Home;
 
 use App\Controllers\App\AbstractController;
+use App\Services\DatabaseManager;
 
 class HomeController extends AbstractController
 {
@@ -13,12 +14,15 @@ class HomeController extends AbstractController
 
     public function login()
     {
+        if(isset($_SESSION['is_logged']) && $_SESSION['is_logged'])
+        {
+            header("location: /dashboard");
+        }
+    
         if($_SERVER["REQUEST_METHOD"] === "GET")
         {
             $_SESSION["token"] = $this->generateToken();
-        
-            $this->generateToken();
-            $this->view("Home/login.php", ["token" => $_SESSION["token"]]);
+            $this->view("Home/login.php", ["token" => $_SESSION["token"], "flash" => ""]);
         }
 
         else
@@ -30,8 +34,52 @@ class HomeController extends AbstractController
                 exit();
             }
 
-            //
+            $user = DatabaseManager::findByName("users", $_POST["login"]);
+
+            if(!$user)
+            {
+                $_SESSION["token"] = $this->generateToken();
+                $this->view("Home/login.php", ["token" => $_SESSION["token"], "flash" => "Utilisateur introuvable"]);
+                exit();
+            }
+
+            if(!password_verify($_POST["password"], $user["password"]))
+            {
+                $_SESSION["token"] = $this->generateToken();
+                $this->view("Home/login.php", ["token" => $_SESSION["token"], "flash" => "Mot de passe erroné"]);
+                exit();
+            }
+
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            $_SESSION['is_logged'] = true;
+
+            header("location: /dashboard");
         }
+    }
+
+    public function dashboard()
+    {
+        if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged'])
+        {
+            header("location: /login");
+        }
+    
+        $this->view("Home/dashboard.php");
+    }
+
+    public function logout()
+    {
+        if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged'])
+        {
+            header("location: /login");
+        }    
+    
+        unset($_SESSION['user_id']);
+        unset($_SESSION['username']);
+        unset($_SESSION['is_logged']);
+
+        header("location: /login");
     }
 
     private function generateToken()
@@ -42,7 +90,7 @@ class HomeController extends AbstractController
 
         for($i = 0 ; $i < $nbChars ; $i++)
         {
-            $index = random_int(0, strlen($charset));
+            $index = random_int(0, strlen($charset) - 1);
             $token .= $charset[$index];
         }
 

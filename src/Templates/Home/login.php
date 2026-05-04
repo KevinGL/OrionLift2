@@ -7,6 +7,9 @@
   </head>
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <body>
+    <div>
+        @flash
+    </div>
     <form method="post">
         <label>Login</label>
         <input type="text" name="login" required />
