@@ -2,5 +2,6 @@
 
 $routes =
 [
-    "/" => ["App\Controllers\Home\HomeController", "index"]
+    "/" => ["App\Controllers\Home\HomeController", "index"],
+    "/login" => ["App\Controllers\Home\HomeController", "login"]
 ];

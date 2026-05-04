@@ -9,6 +9,8 @@ $dotenv->load();
 use App\Services\RoutesManager;
 use App\Services\DatabaseManager;
 
+session_start();
+
 $dbManager = new DatabaseManager();
 
 $routesManager = new RoutesManager($routes);

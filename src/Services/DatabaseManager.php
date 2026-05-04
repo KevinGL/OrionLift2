@@ -20,7 +20,7 @@ class DatabaseManager
         
             $this->db = new PDO("mysql:host=$host;dbname=$dbName;charset=utf8", $user, $password);
             $this->db->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-            echo "Bravo, la connexion est établie !";
+            //echo "Bravo, la connexion est établie !";
         }
         catch (PDOException $e)
         {

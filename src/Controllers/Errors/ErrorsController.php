@@ -11,4 +11,10 @@ class ErrorsController extends AbstractController
         http_response_code(404);
         $this->view("Errors/404.php");
     }
+
+    public function error_403()
+    {
+        http_response_code(403);
+        $this->view("Errors/403.php");
+    }
 };

@@ -11,6 +11,7 @@ class RoutesManager
         $this->routes = $routes;
 
         $this->routes["/error/404"] = ["App\Controllers\Errors\ErrorsController", "error_404"];
+        $this->routes["/error/403"] = ["App\Controllers\Errors\ErrorsController", "error_403"];
     }
 
     public function findController($url)
