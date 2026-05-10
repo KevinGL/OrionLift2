@@ -8,15 +8,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
   <body>
     <form method="post">
-        <label>Login</label>
-        <input type="text" name="login" required />
-
-        <label>Mot de passe</label>
-        <input type="password" name="password" required />
-
-        <input type="hidden" name="token" value="@token" />
-
-        <input type="submit" value="Se connecter" />
+        <input value="@token" type="hidden" name="token" />
+        <div>
+            <label>Nom / Identifiant</label>
+            <input type="text" name="name" />
+        </div>
+        <input type="submit" value="Valider" />
     </form>
   </body>
 </html>

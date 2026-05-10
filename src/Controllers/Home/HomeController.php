@@ -17,12 +17,13 @@ class HomeController extends AbstractController
         if(isset($_SESSION['is_logged']) && $_SESSION['is_logged'])
         {
             header("location: /dashboard");
+            exit();
         }
     
         if($_SERVER["REQUEST_METHOD"] === "GET")
         {
             $_SESSION["token"] = $this->generateToken();
-            $this->view("Home/login.php", ["token" => $_SESSION["token"], "flash" => ""]);
+            $this->view("Home/login.php", ["token" => $_SESSION["token"]]);
         }
 
         else
@@ -30,7 +31,10 @@ class HomeController extends AbstractController
         {
             if($_POST["token"] !== $_SESSION["token"])
             {
-                header("Location: /error/403");
+                unset($_SESSION["token"]);
+            
+                $this->addFlash("Une erreur s'est produite");
+                header("location: /login");
                 exit();
             }
 
@@ -50,11 +54,24 @@ class HomeController extends AbstractController
                 exit();
             }
 
+            unset($_SESSION["token"]);
+
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['is_logged'] = true;
+            $_SESSION['user_role'] = $user["role"];
 
-            header("location: /dashboard");
+            if($user["role"] === "tech")
+            {
+                header("location: /dashboard");
+                exit();
+            }
+            else
+            if($user["role"] === "admin")
+            {
+                header("location: /dashboard_admin");
+                exit();
+            }
         }
     }
 
@@ -63,9 +80,33 @@ class HomeController extends AbstractController
         if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged'])
         {
             header("location: /login");
+            exit();
+        }
+
+        if($_SESSION['user_role'] === 'admin')
+        {
+            header("location: /dashboard_admin");
+            exit();
         }
     
         $this->view("Home/dashboard.php");
+    }
+
+    public function dashboardAdmin()
+    {
+        if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged'])
+        {
+            header("location: /login");
+            exit();
+        }
+
+        if($_SESSION['user_role'] === 'tech')
+        {
+            header("location: /dashboard");
+            exit();
+        }
+    
+        $this->view("Home/dashboard_admin.php");
     }
 
     public function logout()
@@ -73,27 +114,15 @@ class HomeController extends AbstractController
         if(!isset($_SESSION['is_logged']) || !$_SESSION['is_logged'])
         {
             header("location: /login");
+            exit();
         }    
     
         unset($_SESSION['user_id']);
         unset($_SESSION['username']);
         unset($_SESSION['is_logged']);
+        unset($_SESSION['role']);
 
         header("location: /login");
-    }
-
-    private function generateToken()
-    {
-        $nbChars = 30;
-        $charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-        $token = "";
-
-        for($i = 0 ; $i < $nbChars ; $i++)
-        {
-            $index = random_int(0, strlen($charset) - 1);
-            $token .= $charset[$index];
-        }
-
-        return $token;
+        exit();
     }
 };

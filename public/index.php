@@ -11,6 +11,12 @@ use App\Services\DatabaseManager;
 
 session_start();
 
+if(isset($_SESSION["flash"]))
+{
+    echo '<div>' . $_SESSION["flash"] . '</div>';
+    unset($_SESSION["flash"]);
+}
+
 $dbManager = new DatabaseManager();
 
 $routesManager = new RoutesManager($routes);

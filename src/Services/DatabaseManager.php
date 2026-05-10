@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use Exception;
 use PDO;
 use PDOException;
 
@@ -53,5 +54,60 @@ class DatabaseManager
         $datas = $query->fetch();
 
         return $datas;
+    }
+
+    public static function add(string $table, array $item)
+    {
+        //$request = "INSERT INTO $table (name) VALUES (";
+        $request = "INSERT INTO $table (";
+        $keys = array_keys($item);
+
+        for($i = 0 ; $i < count($keys) ; $i++)
+        {
+            $request .= $keys[$i];
+
+            if($i < count($keys) - 1)
+            {
+                $request .= ", ";
+            }
+        }
+
+        $request .= ") VALUES (";
+
+        $values = array_values($item);
+
+        $params = [];
+
+        for($i = 0 ; $i < count($item) ; $i++)
+        {
+            $value = sprintf(":value%d", $i + 1);
+            $request .= $value;
+
+            $key = sprintf("value%d", $i + 1);
+
+            if($i < count($item) - 1)
+            {
+                $request .= ", ";
+            }
+
+            else
+            {
+                $request .= ")";
+            }
+
+            $params[$key] = $values[$i];
+        }
+
+        try
+        {
+            $query = self::$db->prepare($request);
+            $query->execute($params);
+        }
+
+        catch(Exception $e)
+        {
+            echo $e->getMessage();
+            exit();
+        }
     }
 };
